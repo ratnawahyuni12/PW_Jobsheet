@@ -77,7 +77,7 @@ section h2 {
 /* ===== Kartu Statistik (CSS Grid) ===== */
 main section:nth-of-type(2) {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
 }
 
@@ -213,7 +213,7 @@ footer {
 /* ===== Responsive Breakpoints ===== */
 
 /* Tablet ke bawah */
-@media (min-width: 481px) {
+@media (max-width: 900px) {
     main section:nth-of-type(2) {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -245,14 +245,12 @@ footer {
         gap: 0.75rem;
     }
 
+    main section:nth-of-type(2) {
+        grid-template-columns: 1fr;
+    }
+
     form input,
     form select {
         max-width: 100%;
-    }
-}
-
-@media (min-width: 901px) {
-    main section:nth-of-type(2) {
-        grid-template-columns: repeat(4, 1fr);
     }
 }
