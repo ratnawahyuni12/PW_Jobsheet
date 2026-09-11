@@ -17,7 +17,9 @@ function initHapusConfirm() {
             const nama = row ? row.querySelector("td")?.textContent : "data ini";
             const yakin = confirm("Yakin ingin menghapus \"" + nama + "\"?");
             if (yakin && row) {
+                const table = row.closest("table");
                 row.remove();
+                if (table) updateCounter(table);
             }
         });
     });
@@ -29,13 +31,17 @@ function initTableFilter() {
     const table = document.querySelector(".table-responsive table");
     if (!input || !table) return;
 
+    updateCounter(table); // tampilkan counter awal
+
     input.addEventListener("keyup", function () {
         const keyword = input.value.toLowerCase();
         const rows = table.querySelectorAll("tbody tr");
         rows.forEach(function (row) {
-            const teks = row.textContent.toLowerCase();
+            const kolomPertama = row.querySelector("td");
+            const teks = kolomPertama ? kolomPertama.textContent.toLowerCase() : "";
             row.style.display = teks.includes(keyword) ? "" : "none";
         });
+        updateCounter(table);
     });
 }
 
@@ -46,6 +52,19 @@ function tampilkanError(input, pesan) {
     span.className = "error";
     span.textContent = pesan;
     input.insertAdjacentElement("afterend", span);
+}
+
+// ===== Counter baris tabel =====
+function updateCounter(table) {
+    const counterEl = document.getElementById("counter-info");
+    if (!counterEl) return;
+    const semuaBaris = table.querySelectorAll("tbody tr");
+    const totalBaris = semuaBaris.length;
+    let tampil = 0;
+    semuaBaris.forEach(function (row) {
+        if (row.style.display !== "none") tampil++;
+    });
+    counterEl.textContent = "Menampilkan " + tampil + " dari " + totalBaris + " data";
 }
 
 function hapusError(input) {
@@ -98,6 +117,19 @@ function initValidasiForm() {
             } else {
                 hapusError(stok);
             }
+        }
+
+        const isbn = form.querySelector("[name='isbn']");
+        if (isbn && isbn.value.trim() !== "") {
+            const polaIsbn = /^[0-9-]+$/;
+            if (!polaIsbn.test(isbn.value.trim())) {
+                tampilkanError(isbn, "ISBN hanya boleh berisi angka dan tanda hubung.");
+                valid = false;
+            } else {
+                hapusError(isbn);
+            }
+        } else if (isbn) {
+            hapusError(isbn);
         }
 
         if (!valid) {
