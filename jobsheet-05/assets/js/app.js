@@ -78,59 +78,54 @@ function initValidasiForm() {
     const form = document.getElementById("form-tambah");
     if (!form) return;
 
+    const daftarValidasi = [
+        {
+            selector: "[name='judul'], [name='nama']",
+            cekValid: (nilai) => nilai.trim() !== "",
+            pesan: "Field ini wajib diisi."
+        },
+        {
+            selector: "[name='pengarang']",
+            cekValid: (nilai) => nilai.trim() !== "",
+            pesan: "Pengarang wajib diisi."
+        },
+        {
+            selector: "[name='tahun']",
+            cekValid: (nilai) => {
+                const angka = parseInt(nilai, 10);
+                return !isNaN(angka) && angka >= 1900 && angka <= 2026;
+            },
+            pesan: "Tahun harus di antara 1900-2026."
+        },
+        {
+            selector: "[name='stok']",
+            cekValid: (nilai) => {
+                const angka = parseInt(nilai, 10);
+                return !isNaN(angka) && angka >= 0;
+            },
+            pesan: "Stok tidak boleh negatif."
+        },
+        {
+            selector: "[name='isbn']",
+            cekValid: (nilai) => nilai.trim() === "" || /^[0-9-]+$/.test(nilai.trim()),
+            pesan: "ISBN hanya boleh berisi angka dan tanda hubung."
+        }
+    ];
+
     form.addEventListener("submit", function (e) {
         let valid = true;
 
-        const judul = form.querySelector("[name='judul'], [name='nama']");
-        if (judul && judul.value.trim() === "") {
-            tampilkanError(judul, "Field ini wajib diisi.");
-            valid = false;
-        } else if (judul) {
-            hapusError(judul);
-        }
+        daftarValidasi.forEach(function (aturan) {
+            const input = form.querySelector(aturan.selector);
+            if (!input) return;
 
-        const pengarang = form.querySelector("[name='pengarang']");
-        if (pengarang && pengarang.value.trim() === "") {
-            tampilkanError(pengarang, "Pengarang wajib diisi.");
-            valid = false;
-        } else if (pengarang) {
-            hapusError(pengarang);
-        }
-
-        const tahun = form.querySelector("[name='tahun']");
-        if (tahun) {
-            const nilai = parseInt(tahun.value, 10);
-            if (isNaN(nilai) || nilai < 1900 || nilai > 2026) {
-                tampilkanError(tahun, "Tahun harus di antara 1900-2026.");
+            if (!aturan.cekValid(input.value)) {
+                tampilkanError(input, aturan.pesan);
                 valid = false;
             } else {
-                hapusError(tahun);
+                hapusError(input);
             }
-        }
-
-        const stok = form.querySelector("[name='stok']");
-        if (stok) {
-            const nilai = parseInt(stok.value, 10);
-            if (isNaN(nilai) || nilai < 0) {
-                tampilkanError(stok, "Stok tidak boleh negatif.");
-                valid = false;
-            } else {
-                hapusError(stok);
-            }
-        }
-
-        const isbn = form.querySelector("[name='isbn']");
-        if (isbn && isbn.value.trim() !== "") {
-            const polaIsbn = /^[0-9-]+$/;
-            if (!polaIsbn.test(isbn.value.trim())) {
-                tampilkanError(isbn, "ISBN hanya boleh berisi angka dan tanda hubung.");
-                valid = false;
-            } else {
-                hapusError(isbn);
-            }
-        } else if (isbn) {
-            hapusError(isbn);
-        }
+        });
 
         if (!valid) {
             e.preventDefault();
