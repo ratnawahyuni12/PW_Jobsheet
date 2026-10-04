@@ -33,7 +33,7 @@ $totalPages = max(1, (int) ceil($totalRows / $perPage));
             <h2>Daftar Buku</h2>
 
             <?php if ($flash): ?>
-                <p class="flash flash-<?php echo $flash['type']; ?>"><?php echo $flash['pesan']; ?></p>
+                <p class="flash flash-<?php echo e($flash['type']); ?>"><?php echo e($flash['pesan']); ?></p>
             <?php endif; ?>
 
             <div class="search-box">
@@ -67,8 +67,8 @@ $totalPages = max(1, (int) ceil($totalRows / $perPage));
                         <tr>
                             <td><?php echo e($buku['judul']); ?></td>
                             <td><?php echo e($buku['pengarang']); ?></td>
-                            <td><?php echo $buku['tahun']; ?></td>
-                            <td><?php echo $buku['stok']; ?></td>
+                            <td><?php echo e($buku['tahun']); ?></td>
+                            <td><?php echo e($buku['stok']); ?></td>
                             <td>
                                 <a href="edit.php?id=<?php echo $buku['id']; ?>" class="btn-edit">Edit</a>
                                 <form class="form-hapus" method="post" action="hapus.php">

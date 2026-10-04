@@ -29,3 +29,9 @@ kerentanan : Session Fixation
 ditemukan di : auth/proses_login.php
 sebelum : Session ID tidak diperbarui setelah login
 sesudah (perbaikan) : session_regenerate_id(true) dipanggil tepat setelah password_verify() berhasil.
+
+poin 6
+kerentanan : Kebocoran Pesan Error (Information Disclosure)
+ditemukan di : includes/koneksi.php
+sebelum : Saat koneksi database gagal, pesan error asli PDO (SQLSTATE, host, port, nama database) dicetak langsung ke pengguna lewat die("Koneksi database gagal: " . $e->getMessage())
+sesudah (perbaikan) : Diuji dengan mematikan layanan PostgreSQL lalu mengakses aplikasi → terbukti pesan error mentah tampil ke pengguna. Diperbaiki dengan mengganti die() menjadi pesan umum ("Terjadi gangguan pada sistem. Silakan coba lagi nanti.") dan mencatat detail error sebenarnya lewat error_log(). Diuji ulang setelah perbaikan → pesan mentah tidak lagi muncul.
