@@ -14,6 +14,19 @@ if ($anggotaId === '' || $bukuId === '') {
     exit;
 }
 
+$cekTelat = $pdo->prepare(
+    "SELECT COUNT(*) FROM peminjaman
+     WHERE anggota_id = :anggota_id
+       AND status = 'dipinjam'
+       AND tanggal_pinjam < CURRENT_DATE - INTERVAL '14 days'"
+);
+$cekTelat->execute(['anggota_id' => $anggotaId]);
+if ($cekTelat->fetchColumn() > 0) {
+    $_SESSION['flash'] = ['type' => 'error', 'pesan' => 'Anggota ini memiliki peminjaman yang terlambat lebih dari 14 hari. Kembalikan dulu sebelum meminjam buku baru.'];
+    header('Location: tambah.php');
+    exit;
+}
+
 try {
     $pdo->beginTransaction();
 
@@ -28,8 +41,8 @@ try {
     }
 
     $insert = $pdo->prepare(
-        "INSERT INTO peminjaman (buku_id, anggota_id, tanggal_pinjam, status)
-         VALUES (:buku_id, :anggota_id, CURRENT_DATE, 'dipinjam')"
+        "INSERT INTO peminjaman (buku_id, anggota_id, tanggal_pinjam, tanggal_jatuh_tempo, status)
+         VALUES (:buku_id, :anggota_id, CURRENT_DATE, CURRENT_DATE + INTERVAL '14 days', 'dipinjam')"
     );
     $insert->execute(['buku_id' => $bukuId, 'anggota_id' => $anggotaId]);
 

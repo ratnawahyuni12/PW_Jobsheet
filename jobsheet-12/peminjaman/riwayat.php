@@ -17,9 +17,10 @@ if ($anggotaId !== '') {
 
     if ($anggotaTerpilih) {
         $stmt = $pdo->prepare(
-            "SELECT b.judul, p.tanggal_pinjam, p.tanggal_kembali, p.status
+            "SELECT b.judul, a.no_hp, p.tanggal_pinjam, p.tanggal_kembali, p.status
              FROM peminjaman p
              JOIN buku b ON b.id = p.buku_id
+             JOIN anggota a ON a.id = p.anggota_id
              WHERE p.anggota_id = :id
              ORDER BY p.tanggal_pinjam DESC"
         );
@@ -49,7 +50,7 @@ if ($anggotaId !== '') {
             </form>
 
             <?php if ($anggotaTerpilih): ?>
-            <h3>Riwayat &mdash; <?php echo e($anggotaTerpilih['nama']); ?></h3>
+            <h3>Riwayat &mdash; <?php echo e($anggotaTerpilih['nama']); ?> (<?php echo e($anggotaTerpilih['no_hp']); ?>)</h3>
             <div class="table-responsive">
             <table>
                 <thead>
