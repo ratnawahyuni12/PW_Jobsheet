@@ -6,7 +6,7 @@
 ## 1. Registrasi & Login Petugas
 
 1. Buka `http://localhost:8000/auth/register.php`.
-2. Isi Nama, Username, Password (minimal 6 karakter), klik **Daftar**. ![Form registrasi](images/registrasi.png)
+2. Isi Nama, Username, Password (minimal 6 karakter), klik **Daftar**. ![Form registrasi](images/register.png)
 3. Setelah berhasil, akan diarahkan ke halaman Login. Masukkan username & password yang baru dibuat, klik **Masuk**. ![Form login](images/login.png)
 4. Setelah berhasil login, navbar menampilkan nama petugas dan tombol **Logout**, serta menu tambahan (Tambah Buku, Daftar/Tambah Anggota, Peminjaman) yang tidak terlihat oleh Tamu. ![Navbar setelah login](images/navbar.png)
 
